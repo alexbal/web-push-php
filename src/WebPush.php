@@ -183,9 +183,15 @@ class WebPush
                     $return[] = $error;
                     $completeSuccess = false;
                 } else {
+                    /** @var RequestException $response **/
+                    $response = $result['value'];
                     $return[] = array(
-                        'success' => true,
+                        'success'    => true,
+                        'statusCode' => $response->getStatusCode(),
+                        'content'    => $response->getBody(),
+                        'headers'    => $response->getHeaders()
                     );
+
                 }
             }
         }
@@ -193,7 +199,7 @@ class WebPush
         // reset queue
         $this->notifications = null;
 
-        return $completeSuccess ? true : $return;
+        return $return;
     }
 
     private function prepare(array $notifications)
